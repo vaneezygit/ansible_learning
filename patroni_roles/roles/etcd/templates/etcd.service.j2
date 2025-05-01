@@ -1,0 +1,25 @@
+[Unit]
+Description=etcd key-value store
+Documentation=https://github.com/coreos/etcd
+After=network.target
+
+[Service]
+User=root
+Type=notify
+ExecStart=/usr/local/bin/etcd \
+  --name {{ inventory_hostname }} \
+  --data-dir {{ etcd_data_dir }} \
+  --initial-advertise-peer-urls http://{{ ansible_host }}:{{ etcd_peer_port }} \
+  --listen-peer-urls http://{{ ansible_host }}:{{ etcd_peer_port }} \
+  --listen-client-urls http://{{ ansible_host }}:{{ etcd_client_port }},http://127.0.0.1:{{ etcd_client_port }} \
+  --advertise-client-urls http://{{ ansible_host }}:{{ etcd_client_port }} \
+  --initial-cluster {% for node in etcd_cluster_nodes %}{{ node.name }}=http://{{ node.ansible_host }}:{{ etcd_peer_port }}{% if not loop.last %},{% endif %}{% endfor %} \
+  --initial-cluster-state new \
+  --initial-cluster-token {{ etcd_cluster_token }}
+  --enable-v2 true
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

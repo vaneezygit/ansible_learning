@@ -1,0 +1,71 @@
+scope: {{ patroni_scope }}
+namespace: /db/
+name: {{ inventory_hostname }}
+
+restapi:
+  listen: 0.0.0.0:8008
+  connect_address: {{ ansible_host }}:8008
+  auth: 'postgres:postgres'
+
+etcd3:
+  hosts:
+{% for node in etcd_nodes %}
+    - {{ node.ansible_host }}:2379
+{% endfor %}
+
+
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    postgresql:
+      use_pg_rewind: true
+      use_slots: true
+      parameters:
+        wal_level: replica
+        hot_standby: "on"
+        max_wal_senders: 10
+        max_replication_slots: 10
+        wal_keep_size: 256
+
+  initdb:
+    - encoding: UTF8
+    - data-checksums
+
+  users:
+    postgres:
+      password: {{ postgres_admin_password | default('postgres') }}
+      options:
+        - createrole
+        - createdb
+
+postgresql:
+  listen: 0.0.0.0:5432
+  connect_address: {{ ansible_host }}:5432
+  data_dir: {{ patroni_data_dir }}
+  bin_dir: {{ patroni_bin_dir }}
+  authentication:
+    superuser:
+      username: postgres
+      password: {{ postgres_superuser_password | default('postgres') }}
+    replication:
+      username: postgres
+      password: {{ postgres_replication_password | default('postgres') }}
+  parameters:
+    unix_socket_directories: '/var/run/postgresql'
+  create_replica_methods:
+    - basebackup
+  basebackup:
+    max-rate: 100M
+    checkpoint: fast
+  pg_hba:
+    - host replication postgres 192.168.1.0/24 md5
+
+tags:
+  nofailover: false
+  noloadbalance: false
+  clonefrom: false
+  nosync: false
+

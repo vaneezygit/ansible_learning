@@ -1,0 +1,12 @@
+---
+# group_vars/patroni.yml
+postgres_version: 16
+postgres_admin_user: "postgres"
+postgres_admin_password: "postgres"  
+
+replication_user: "postgres"
+replication_password: "postgres"
+
+patroni_scope: "mycluster"
+patroni_data_dir: "/var/lib/postgresql/16/main"
+patroni_bin_dir: "/usr/lib/postgresql/16/bin"

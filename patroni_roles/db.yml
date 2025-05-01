@@ -1,0 +1,7 @@
+---
+- hosts: db
+  roles:
+    - { role: 'change_server_name', tags: ['rename_host'] } 
+    - { role: 'postgres', tags: ['pg'] }
+    - { role: 'etcd', tags: ['etcd'] }
+    - { role: 'patroni', tags: ['patroni'] }  

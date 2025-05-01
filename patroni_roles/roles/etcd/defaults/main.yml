@@ -1,0 +1,16 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for etcd
+
+etcd_version: "3.5.11"
+etcd_data_dir: "/var/lib/etcd"
+etcd_client_port: 2379
+etcd_peer_port: 2380
+
+etcd_cluster_token: "etcd-cluster-1"
+
+# Список всех нод etcd
+etcd_cluster_nodes:
+  - { name: "srv-db1", ansible_host: "192.168.1.134" }
+  - { name: "srv-db2", ansible_host: "192.168.1.127" }
+
