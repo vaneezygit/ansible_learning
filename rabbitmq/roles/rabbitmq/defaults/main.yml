@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for rabbitmq
+rabbitmq_version: "3.12.1"
+erlang_version: "26.0"
+
+rabbitmq_hosts:
+  - { ip: "", name: "rmq-1" }
+  - { ip: "", name: "rmq-2" }
+  - { ip: "", name: "rmq-3" }  
+
+rabbitmq_nodes:
+  - rmq-1
+  - rmq-2
+  - rmq-3
+rabbitmq_cluster_name: mycluster
+rabbitmq_user: admin
+rabbitmq_password: admin
+

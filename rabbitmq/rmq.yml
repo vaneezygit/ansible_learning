@@ -1,0 +1,5 @@
+---
+- hosts: rmq
+  roles:
+    - { role: 'change_server_name', tags: ['rename_host'] } 
+    - { role: 'rabbitmq', tags: ['rmq'] } 

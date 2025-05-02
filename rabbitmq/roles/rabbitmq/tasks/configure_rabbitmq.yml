@@ -1,0 +1,39 @@
+---
+- name: Enable RabbitMQ management plugin
+  ansible.builtin.shell:
+    cmd: rabbitmq-plugins enable rabbitmq_management
+    creates: /etc/rabbitmq/enabled_plugins
+
+- name: Deploy rabbitmq.conf
+  ansible.builtin.template:
+    src: rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart RabbitMQ
+
+- name: Deploy rabbitmq-env.conf
+  ansible.builtin.template:
+    src: rabbitmq-env.conf.j2
+    dest: /etc/rabbitmq/rabbitmq-env.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart RabbitMQ
+
+- name: Create RabbitMQ user
+  ansible.builtin.shell:
+    cmd: rabbitmqctl add_user {{ rabbitmq_user }} {{ rabbitmq_password }}
+  when: ansible_hostname == rabbitmq_nodes[0]
+
+- name: Set administrator tag
+  ansible.builtin.shell:
+    cmd: rabbitmqctl set_user_tags {{ rabbitmq_user }} administrator
+  when: ansible_hostname == rabbitmq_nodes[0]
+
+- name: Set permissions
+  ansible.builtin.shell:
+    cmd: rabbitmqctl set_permissions -p / {{ rabbitmq_user }} ".*" ".*" ".*"
+  when: ansible_hostname == rabbitmq_nodes[0]
+

@@ -1,0 +1,7 @@
+---
+
+- name: Install erlang
+  apt:
+    name: erlang
+    state: present
+    update_cache: yes    

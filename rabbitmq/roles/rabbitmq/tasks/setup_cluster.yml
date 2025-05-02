@@ -1,0 +1,18 @@
+---
+
+- name: Stop RabbitMQ app
+  ansible.builtin.command: rabbitmqctl stop_app
+  when: ansible_hostname != rabbitmq_nodes[0]
+
+- name: Reset RabbitMQ node
+  ansible.builtin.command: rabbitmqctl reset
+  when: ansible_hostname != rabbitmq_nodes[0]
+
+- name: Join cluster
+  ansible.builtin.command: rabbitmqctl join_cluster rabbit@{{ rabbitmq_nodes[0] }}
+  when: ansible_hostname != rabbitmq_nodes[0]
+
+- name: Start RabbitMQ app
+  ansible.builtin.command: rabbitmqctl start_app
+  when: ansible_hostname != rabbitmq_nodes[0]
+

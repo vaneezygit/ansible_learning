@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for rabbitmq
+
+- name: Edit hosts
+  include_tasks: edit_hosts.yml
+
+- name: Install erlang
+  include_tasks: install_erlang.yml
+
+- name: Install rabbitmq
+  include_tasks: install_rabbitmq.yml
+
+- name: Configure rabbitmq
+  include_tasks: configure_rabbitmq.yml
+
+- name: Setup cluster
+  include_tasks: setup_cluster.yml
+

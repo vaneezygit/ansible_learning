@@ -11,6 +11,6 @@ etcd_cluster_token: "etcd-cluster-1"
 
 # Список всех нод etcd
 etcd_cluster_nodes:
-  - { name: "srv-db1", ansible_host: "192.168.1.134" }
-  - { name: "srv-db2", ansible_host: "192.168.1.127" }
+  - { name: "srv-db1", ansible_host: "" }
+  - { name: "srv-db2", ansible_host: "" }
 
